@@ -6,7 +6,7 @@
   <depth>0</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
-  <maskName>&lt;undefined&gt;</maskName>
+  <maskName>spr_player_idle</maskName>
   <events>
     <event eventtype="0" enumb="0">
       <action>
@@ -36,6 +36,8 @@ max_x_vel = 10; // maximum x velocity
 
 grav = 1;
 terminal_vel = 20;
+jump_vel = -20;
+jump_release_vel = -6;
 
 on_ground = false;  // are we on the ground?
 
@@ -67,7 +69,9 @@ on_ground = false;  // are we on the ground?
 var left_pressed = keyboard_check(vk_left);
 var right_pressed = keyboard_check(vk_right);
 var jump_pressed = keyboard_check(vk_space);
+var jump_released = keyboard_check_released(vk_space);
 
+// directional controls
 if(left_pressed)
 {
     if(x_vel &gt; -max_x_vel)
@@ -86,21 +90,36 @@ else
 
 // gravity
 y_vel += grav;
-if(y_vel &gt; terminal_vel)
+if(y_vel &gt; terminal_vel)    // clamp to terminal velocity
     y_vel = terminal_vel;
     
 // jump
 if(jump_pressed &amp;&amp; on_ground)
 {
-    y_vel = -20;
+    y_vel = jump_vel;
     on_ground = false;
+}
+
+// jump release
+if(jump_released &amp;&amp; !on_ground &amp;&amp; y_vel &lt; jump_release_vel) // if we are jumping up above the jump release velocity
+{
+    y_vel = jump_release_vel;
 }
 
 // flip sprite
 if(x_vel != 0)
-    image_xscale = sign(x_vel);
+{
+    if(image_xscale != sign(x_vel))
+    {
+        image_xscale = sign(x_vel);
+        
+        while(place_meeting(x,y,obj_solid)) // sprite might get stuck in wall after flip - nudge it out
+            x+=sign(x_vel);
+    }
+}
 
 // Apply velocity
+// --------------
 
 // Apply Horizontal Velocity
 if(place_meeting(x+x_vel,y,obj_solid))  // step will produce collision
@@ -108,7 +127,7 @@ if(place_meeting(x+x_vel,y,obj_solid))  // step will produce collision
     while(!place_meeting(x+sign(x_vel),y,obj_solid))
         x+=sign(x_vel);
         
-    //x_vel = 0;
+    x_vel = 0;
 }
 else
 {
