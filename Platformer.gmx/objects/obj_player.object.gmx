@@ -118,41 +118,7 @@ if(x_vel != 0)
     }
 }
 
-// Apply velocity
-// --------------
-
-// Apply Horizontal Velocity
-if(place_meeting(x+x_vel,y,obj_solid))  // step will produce collision
-{
-    while(!place_meeting(x+sign(x_vel),y,obj_solid))
-        x+=sign(x_vel);
-        
-    x_vel = 0;
-}
-else
-{
-    x+=x_vel;
-}
-
-// Apply Vertical Velocity
-if(place_meeting(x,y+y_vel,obj_solid))  // step will produce collision
-{
-    while(!place_meeting(x,y+sign(y_vel),obj_solid))
-        y+=sign(y_vel);
-
-    // have we landed?
-    if(y_vel &gt; 0 &amp;&amp; on_ground == false)
-    {
-        y_vel = 0;
-        on_ground = true;
-    }
-    
-    y_vel = 0;
-}
-else
-{
-    y+=y_vel;
-}
+move(obj_solid);
 </string>
           </argument>
         </arguments>
