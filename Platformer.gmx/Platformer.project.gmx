@@ -17,6 +17,12 @@
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\move.gml</script>
+    <scripts name="Player">
+      <script>scripts\player_walk_update.gml</script>
+      <script>scripts\player_idle_update.gml</script>
+      <script>scripts\player_jump_update.gml</script>
+      <script>scripts\player_set_state.gml</script>
+    </scripts>
   </scripts>
   <objects name="objects">
     <objects name="Player">

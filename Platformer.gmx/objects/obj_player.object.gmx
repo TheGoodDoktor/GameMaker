@@ -41,6 +41,7 @@ jump_release_vel = -6;
 
 on_ground = false;  // are we on the ground?
 
+player_set_state("idle")
 
 </string>
           </argument>
@@ -64,61 +65,10 @@ on_ground = false;  // are we on the ground?
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// Update player position
+            <string>/// Update player
 
-var left_pressed = keyboard_check(vk_left);
-var right_pressed = keyboard_check(vk_right);
-var jump_pressed = keyboard_check(vk_space);
-var jump_released = keyboard_check_released(vk_space);
+script_execute(state_update_func)
 
-// directional controls
-if(left_pressed)
-{
-    if(x_vel &gt; -max_x_vel)
-        x_vel -= 1;
-}
-else if(right_pressed)
-{
-    if(x_vel &lt; max_x_vel)
-        x_vel += 1;
-}
-else
-{
-    if(x_vel !=0)
-        x_vel -= sign(x_vel);
-}
-
-// gravity
-y_vel += grav;
-if(y_vel &gt; terminal_vel)    // clamp to terminal velocity
-    y_vel = terminal_vel;
-    
-// jump
-if(jump_pressed &amp;&amp; on_ground)
-{
-    y_vel = jump_vel;
-    on_ground = false;
-}
-
-// jump release
-if(jump_released &amp;&amp; !on_ground &amp;&amp; y_vel &lt; jump_release_vel) // if we are jumping up above the jump release velocity
-{
-    y_vel = jump_release_vel;
-}
-
-// flip sprite
-if(x_vel != 0)
-{
-    if(image_xscale != sign(x_vel))
-    {
-        image_xscale = sign(x_vel);
-        
-        while(place_meeting(x,y,obj_solid)) // sprite might get stuck in wall after flip - nudge it out
-            x+=sign(x_vel);
-    }
-}
-
-move(obj_solid);
 </string>
           </argument>
         </arguments>
